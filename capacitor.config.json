@@ -1,0 +1,8 @@
+{
+  "appId": "com.tradesignalpro.app",
+  "appName": "Trade Signal Pro",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

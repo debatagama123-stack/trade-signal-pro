@@ -1,0 +1,16 @@
+{
+  "name": "trade-signal-pro-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Android wrapper builder for Trade Signal Pro",
+  "scripts": {
+    "build": "echo Static web app bundled in www"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3"
+  }
+}
