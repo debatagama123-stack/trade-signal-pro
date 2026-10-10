@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<meta name="description" content="Dashboard trading signal multi-timeframe dengan alert perubahan sinyal.">
+<link rel="manifest" href="manifest.json">
+<title>Trade Signal Pro</title>
+<style>
+:root{--bg:#07111f;--panel:#0c1a2b;--panel2:#102238;--line:#1b3854;--txt:#e7f0fa;--muted:#8fa7bf;--green:#18d69a;--red:#ff5d73;--yellow:#ffca55;--blue:#43a5ff}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(150deg,#06101c,#081727 55%,#07111f);color:var(--txt);font:14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:15px 16px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:#07111ff2;backdrop-filter:blur(12px);z-index:5}
+.brand{font-weight:850;font-size:20px;letter-spacing:.2px}.brand span{color:var(--green)}.sub{color:var(--muted);font-size:11px;margin-top:3px}
+button,select{background:#10243a;color:var(--txt);border:1px solid #244562;border-radius:9px;padding:9px 11px;font:inherit}
+button{cursor:pointer}button:active{transform:scale(.98)}.primary{background:#087f65;border-color:#12c997;font-weight:700}.top-actions{display:flex;gap:7px}
+main{max-width:1250px;margin:auto;padding:12px;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);gap:12px}
+.panel{background:linear-gradient(160deg,#0d1d30,#0a1726);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
+.panel-head{padding:13px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}.panel-head h2{font-size:14px;margin:0}.muted{color:var(--muted)}.small{font-size:11px}
+.controls{padding:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}.controls select{flex:1;min-width:115px}
+.quote{display:flex;align-items:center;justify-content:space-between;padding:0 14px 12px;gap:12px}.price{font-size:25px;font-weight:800}.positive{color:var(--green)}.negative{color:var(--red)}.warning{color:var(--yellow)}
+.tfbar{display:flex;gap:5px;overflow-x:auto;padding:0 12px 12px}.tfbtn{padding:7px 10px;white-space:nowrap;font-size:12px}.tfbtn.active{background:#087f65;border-color:#1ad6a0}
+.chart-wrap{padding:0 8px 8px}.chart{width:100%;height:auto;display:block;background:#081523;border-radius:9px}.chart-label{fill:#8fa7bf;font-size:10px}.chart-grid{stroke:#183047;stroke-width:1}.candle-up{fill:#16d6a0;stroke:#16d6a0}.candle-down{fill:#ff5d73;stroke:#ff5d73}.ema{fill:none;stroke:#45a7ff;stroke-width:2}.signal-tag{font-size:12px;font-weight:800}.signal-summary{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:12px}
+.big-signal{border-radius:12px;padding:12px 8px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:6px;font-size:20px;font-weight:900}.big-signal small{font-size:10px;font-weight:600}.buy-bg{background:#06392f;color:var(--green);border:1px solid #0d8c6c}.sell-bg{background:#401b27;color:var(--red);border:1px solid #9e344b}.side-bg{background:#3b3016;color:var(--yellow);border:1px solid #82651e}
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:8px}.level{background:#0a1725;border:1px solid #1b354d;border-radius:9px;padding:9px}.level b{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}.level strong{font-size:13px}
+.table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px 12px;text-align:left;border-bottom:1px solid #183047;font-size:12px}.table th{color:var(--muted);font-weight:600;background:#0d2033}.pill{font-size:10px;font-weight:800;border-radius:6px;padding:5px 7px;display:inline-block}.pill.BUY{background:#073d31;color:var(--green)}.pill.SELL{background:#431b28;color:var(--red)}.pill.SIDEWAYS{background:#3d3115;color:var(--yellow)}
+.right-col{display:flex;flex-direction:column;gap:12px}.news-item,.notice-item{padding:11px 13px;border-bottom:1px solid #183047}.news-item:last-child,.notice-item:last-child{border-bottom:0}.news-title{font-weight:700;margin-bottom:5px}.notice-item{display:flex;gap:9px;align-items:flex-start}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);margin-top:5px;flex-shrink:0}.foot{padding:12px;color:var(--muted);font-size:10px;line-height:1.5;border-top:1px solid var(--line)}
+.status{display:inline-flex;align-items:center;gap:5px;color:var(--green);font-size:11px}.status:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.toast-area{position:fixed;right:12px;bottom:18px;z-index:20;display:flex;flex-direction:column;gap:8px;max-width:min(360px,calc(100vw - 24px))}.toast{background:#102a40;border:1px solid #2e5c78;border-radius:12px;padding:12px 14px;box-shadow:0 10px 35px #0008;animation:slide .2s ease}.toast strong{display:block;margin-bottom:3px}.toast.buy{border-color:#16a77e}.toast.sell{border-color:#c8445b}@keyframes slide{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:850px){main{grid-template-columns:1fr;padding:8px}.right-col{display:grid;grid-template-columns:1fr}.brand{font-size:18px}.quote .price{font-size:22px}}
+@media(min-width:851px){.right-col{align-self:start}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="brand">📈 Trade Signal <span>Pro</span></div><div class="sub">ALL PAIR · MULTI-TIMEFRAME · NEWS ALERT</div></div>
+  <div class="top-actions"><button id="notifyBtn" class="primary">🔔 Aktifkan Notif</button></div>
+</header>
+<main>
+<section class="panel">
+  <div class="panel-head"><h2>Chart & Sinyal</h2><span class="status" id="connection">Menghubungkan…</span></div>
+  <div class="controls">
+    <select id="pair" aria-label="Pilih pair">
+      <option>XAUUSD</option><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>AUDUSD</option><option>USDCAD</option><option>BTCUSDT</option><option>ETHUSDT</option><option>US30</option><option>NAS100</option>
+    </select>
+    <select id="market"><option value="Crypto">Crypto · live publik</option><option value="Forex">Forex · API key</option><option value="Gold">Gold/XAUUSD · API key</option><option value="Index">Index · API key</option></select>
+    <button id="refreshBtn">↻ Perbarui</button><button id="settingsBtn">⚙ API</button>
+  </div>
+  <div class="quote"><div><div class="muted small" id="pairName">Gold / US Dollar</div><div class="price" id="price">3,948.62</div></div><div style="text-align:right"><div id="change" class="positive">+0.42%</div><div class="muted small" id="updated">Menunggu data pasar</div></div></div>
+  <div class="tfbar" id="tfbar"></div>
+  <div class="chart-wrap"><svg id="chart" class="chart" viewBox="0 0 760 370" role="img" aria-label="Candlestick chart ilustrasi"></svg></div>
+  <div class="signal-summary">
+    <div id="bigSignal" class="big-signal buy-bg">↑ BUY<small>SINYAL DEMO</small></div>
+    <div class="levels">
+      <div class="level"><b>ENTRY</b><strong id="entry">3,948.62</strong></div>
+      <div class="level"><b>STOP LOSS</b><strong id="sl" class="negative">3,943.00</strong></div>
+      <div class="level"><b>TAKE PROFIT 1</b><strong id="tp1" class="positive">3,953.00</strong></div>
+      <div class="level"><b>TAKE PROFIT 2</b><strong id="tp2" class="positive">3,958.00</strong></div>
+    </div>
+  </div>
+  <div class="foot" id="dataNote">Menghubungkan data pasar. Crypto menggunakan market data publik Binance; Forex, emas, dan indeks memerlukan API provider yang sesuai. Sinyal adalah hasil indikator sederhana, bukan jaminan profit.</div>
+</section>
+<aside class="right-col">
+  <section class="panel">
+    <div class="panel-head"><h2>Multi-Timeframe Signal</h2><span class="muted small">9 timeframe</span></div>
+    <table class="table"><thead><tr><th>TF</th><th>Sinyal</th><th>Tren</th></tr></thead><tbody id="signalTable"></tbody></table>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>📰 News Alert</h2><span class="warning small">Butuh feed berita</span></div>
+    <div class="news-item"><div class="news-title">Kalender ekonomi belum terhubung</div><div class="muted small">Tambahkan provider kalender ekonomi/API untuk berita real-time. Tidak menampilkan berita palsu.</div></div>
+    <div class="news-item"><div class="news-title">Peringatan risiko</div><div class="muted small">Berita dapat meningkatkan volatilitas. Konfirmasi arah dengan price action.</div></div>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>🔔 Notifikasi Terbaru</h2><button id="clearBtn">Hapus</button></div>
+    <div id="notifications"><div class="notice-item muted">Belum ada perubahan sinyal.</div></div>
+  </section>
+</aside>
+</main>
+<div id="apiModal" style="display:none;position:fixed;inset:0;background:#000b;z-index:30;padding:18px;align-items:center;justify-content:center">
+<div class="panel" style="max-width:480px;width:100%;padding:16px">
+<div class="panel-head" style="padding:0 0 12px"><h2>Pengaturan API market</h2><button id="closeApi">Tutup</button></div>
+<p class="muted small">Untuk Forex/XAUUSD/indeks, gunakan API key dari provider yang mendukung instrumen Anda (contoh Twelve Data). Key disimpan lokal pada browser ini; jangan gunakan key rahasia dengan izin publik/redistribusi.</p>
+<label class="small" for="apiKey">Twelve Data API key</label><input id="apiKey" type="password" autocomplete="off" placeholder="Tempel API key" style="width:100%;padding:11px;background:#081523;color:#e7f0fa;border:1px solid #244562;border-radius:9px;margin:6px 0 12px">
+<label class="small" for="customSymbol">Simbol provider (opsional)</label><input id="customSymbol" placeholder="Contoh: XAU/USD atau EUR/USD" style="width:100%;padding:11px;background:#081523;color:#e7f0fa;border:1px solid #244562;border-radius:9px;margin:6px 0 12px">
+<button class="primary" id="saveApi">Simpan & Hubungkan</button>
+<p class="muted small">Ketersediaan real-time, limit, dan WebSocket mengikuti paket/provider. Untuk produksi, pindahkan API key ke backend.</p>
+</div></div>
+<div class="toast-area" id="toasts" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
